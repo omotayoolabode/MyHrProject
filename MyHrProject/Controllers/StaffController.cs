@@ -1,46 +1,43 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyHrProject.Data;
 using MyHrProject.Models;
+using MyHrProject.Services.Interface;
 
 namespace MyHrProject.Controllers
 {
     public class StaffController : Controller
     {
         private readonly MyHrProjectContext _context;
+        private readonly ILogger<StaffController> _logger;
+        private readonly IStaffService _staffservice; 
 
-        public StaffController(MyHrProjectContext context)
+        public StaffController(MyHrProjectContext context, ILogger<StaffController> logger, IStaffService service)
         {
             _context = context;
+            _logger = logger;
+            _staffservice = service;
+
+
         }
 
         // GET: Staff
         public async Task<IActionResult> Index()
         {
-              return _context.Staff != null ? 
-                          View(await _context.Staff.ToListAsync()) :
+            var allstaff = await _staffservice.ReturnAllStaff().ToListAsync();
                           Problem("Entity set 'MyHrProjectContext.Staff'  is null.");
+                          return View(allstaff);
         }
 
         // GET: Staff/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null || _context.Staff == null)
-            {
-                return NotFound();
-            }
-
-            var staff = await _context.Staff
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var staff = await _staffservice.GetStaffById(id);
             if (staff == null)
             {
                 return NotFound();
             }
+            _logger.LogInformation("Staff Page Viewed");
 
             return View(staff);
         }
@@ -71,7 +68,7 @@ namespace MyHrProject.Controllers
         // GET: Staff/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (id == null || _context.Staff == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -122,7 +119,7 @@ namespace MyHrProject.Controllers
         // GET: Staff/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null || _context.Staff == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -142,10 +139,6 @@ namespace MyHrProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (_context.Staff == null)
-            {
-                return Problem("Entity set 'MyHrProjectContext.Staff'  is null.");
-            }
             var staff = await _context.Staff.FindAsync(id);
             if (staff != null)
             {
@@ -158,7 +151,7 @@ namespace MyHrProject.Controllers
 
         private bool StaffExists(Guid id)
         {
-          return (_context.Staff?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Staff.Any(e => e.Id == id));
         }
     }
 }

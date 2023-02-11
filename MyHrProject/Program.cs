@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MyHrProject.Data;
+using MyHrProject.Services.Implementation;
+using MyHrProject.Services.Interface;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyHrProjectContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyHrProjectContext") ?? throw new InvalidOperationException("Connection string 'MyHrProjectContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IStaffService, StaffService>();
 
 var app = builder.Build();
 

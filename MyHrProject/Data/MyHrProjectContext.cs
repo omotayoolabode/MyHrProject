@@ -14,6 +14,6 @@ namespace MyHrProject.Data
         {
         }
 
-        public DbSet<MyHrProject.Models.Staff> Staff { get; set; } = default!;
+        public DbSet<Staff> Staff { get; set; } = default!;
     }
 }

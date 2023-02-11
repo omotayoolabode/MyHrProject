@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyHrProject.Data;
 
@@ -11,9 +12,11 @@ using MyHrProject.Data;
 namespace MyHrProject.Migrations
 {
     [DbContext(typeof(MyHrProjectContext))]
-    partial class MyHrProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20230117183309_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
