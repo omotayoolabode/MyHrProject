@@ -5,7 +5,8 @@ using MyHrProject.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyHrProjectContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyHrProjectContext") ?? throw new InvalidOperationException("Connection string 'MyHrProjectContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyHrProjectContext") ??
+                         throw new InvalidOperationException("Connection string 'MyHrProjectContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -29,7 +30,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    "default",
+    "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
